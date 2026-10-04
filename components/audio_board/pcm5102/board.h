@@ -1,7 +1,7 @@
 /*
  * ESPRESSIF MIT License
  *
- * Copyright (c) 2020 <ESPRESSIF SYSTEMS (SHANGHAI) CO., LTD>
+ * Copyright (c) 2019 <ESPRESSIF SYSTEMS (SHANGHAI) CO., LTD>
  *
  * Permission is hereby granted for use on all ESPRESSIF SYSTEMS products, in which case,
  * it is free of charge, to any person obtaining a copy of this software and associated
@@ -30,9 +30,7 @@
 #include "board_pins_config.h"
 #include "esp_peripherals.h"
 #include "display_service.h"
-#if defined(CONFIG_AI_THINKER_ESP32_A1S_AUDIO_KIT_USING_SDCARD)
 #include "periph_sdcard.h"
-#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -43,7 +41,6 @@ extern "C" {
  */
 struct audio_board_handle {
     audio_hal_handle_t audio_hal; /*!< audio hardware abstract layer handle */
-    audio_hal_handle_t adc_hal;   /*!< adc hardware abstract layer handle */
 };
 
 typedef struct audio_board_handle *audio_board_handle_t;
@@ -61,15 +58,6 @@ audio_board_handle_t audio_board_init(void);
  * @return The audio hal handle
  */
 audio_hal_handle_t audio_board_codec_init(void);
-
-/**
- * @brief Initialize adc
- *
- * @return The adc hal handle
- */
-#if defined(CONFIG_AI_THINKER_ESP32_A1S_ES8388_BUTTON_KEY_ADC)
-audio_hal_handle_t audio_board_adc_init(void);
-#endif
 
 /**
  * @brief Initialize led peripheral and display service
@@ -98,9 +86,7 @@ esp_err_t audio_board_key_init(esp_periph_set_handle_t set);
  *     - ESP_OK, success
  *     - Others, fail
  */
-#if defined(CONFIG_AI_THINKER_ESP32_A1S_AUDIO_KIT_USING_SDCARD)
 esp_err_t audio_board_sdcard_init(esp_periph_set_handle_t set, periph_sdcard_mode_t mode);
-#endif
 
 /**
  * @brief Query audio_board_handle

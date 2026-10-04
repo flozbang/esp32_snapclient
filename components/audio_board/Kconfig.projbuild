@@ -7,6 +7,9 @@ choice CUSTOM_AUDIO_BOARD
 config CUSTOM_AUDIO_BOARD_AI_THINKER_A1S
     bool "AI-Thinker ESP32 Audio Kit (ES8388)"
 
+config CUSTOM_AUDIO_BOARD_PCM5102
+    bool "PCM5102 I2S DAC"
+
 endchoice
 
 endmenu
