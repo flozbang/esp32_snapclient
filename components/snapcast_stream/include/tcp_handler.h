@@ -1,0 +1,15 @@
+/*
+ * tcp_handler.h
+ *
+ *  Created on: 14.01.2024
+ *      Author: florian
+ */
+
+#ifndef COMPONENTS_SNAPCAST_STREAM_INCLUDE_TCP_HANDLER_H_
+#define COMPONENTS_SNAPCAST_STREAM_INCLUDE_TCP_HANDLER_H_
+
+
+
+
+
+#endif /* COMPONENTS_SNAPCAST_STREAM_INCLUDE_TCP_HANDLER_H_ */

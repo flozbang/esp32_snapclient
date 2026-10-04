@@ -1,0 +1,11 @@
+idf_component_register(
+    SRCS
+        "micro_flac_decoder.c"
+        "micro_flac_bridge.cpp"
+    INCLUDE_DIRS
+        "include"
+    REQUIRES
+    	esp_timer
+        audio_pipeline
+        micro-flac
+)

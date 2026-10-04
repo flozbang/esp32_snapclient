@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Audio</title>
+<style>
+:root {
+  --bg: #eef1f5;
+  --card: #ffffff;
+  --text: #172033;
+  --muted: #667085;
+  --primary: #163a70;
+  --primary-2: #245493;
+  --border: #d8dee8;
+  --ok: #1f7a4d;
+  --warn: #b26a00;
+  --danger: #a33333;
+  --shadow: 0 14px 40px rgba(23, 32, 51, 0.10);
+  --radius: 18px;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; min-height: 100%; }
+body {
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+.app-shell { min-height: 100vh; display: flex; flex-direction: column; }
+.topbar {
+  background: var(--primary);
+  color: white;
+  padding: 18px 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  box-shadow: 0 3px 14px rgba(0,0,0,.14);
+}
+.brand { display: flex; flex-direction: column; min-width: 0; }
+.brand-title { font-size: 1.25rem; font-weight: 750; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.brand-sub { font-size: .82rem; opacity: .78; margin-top: 3px; }
+.status-pill {
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-size: .8rem;
+  font-weight: 700;
+  background: rgba(255,255,255,.14);
+  white-space: nowrap;
+}
+.page {
+  width: min(1120px, calc(100% - 28px));
+  margin: 28px auto 44px;
+}
+.page-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+.page-title { margin: 0; font-size: clamp(1.65rem, 3vw, 2.4rem); }
+.page-copy { margin: 7px 0 0; color: var(--muted); max-width: 720px; line-height: 1.45; }
+.grid { display: grid; gap: 18px; }
+.grid-3 { grid-template-columns: repeat(3, minmax(0,1fr)); }
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 22px;
+}
+.nav-card {
+  min-height: 190px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  text-decoration: none;
+  color: inherit;
+  transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+}
+.nav-card:hover { transform: translateY(-2px); border-color: #b8c5d8; box-shadow: 0 18px 48px rgba(23,32,51,.14); }
+.nav-card h2 { margin: 0 0 8px; font-size: 1.3rem; }
+.nav-card p { margin: 0; color: var(--muted); line-height: 1.45; }
+.nav-link { margin-top: 18px; font-weight: 750; color: var(--primary); }
+.form-grid { display: grid; gap: 16px; }
+.field { display: grid; gap: 7px; }
+label { font-size: .9rem; font-weight: 700; color: #344054; }
+input[type=text], input[type=password], select {
+  width: 100%;
+  padding: 13px 14px;
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  background: #fff;
+  font: inherit;
+  outline: none;
+}
+input:focus, select:focus { border-color: #7ba0ce; box-shadow: 0 0 0 3px rgba(36,84,147,.12); }
+.actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
+.btn {
+  border: 0;
+  border-radius: 11px;
+  padding: 12px 17px;
+  font: inherit;
+  font-weight: 750;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.btn-primary { background: var(--primary); color: #fff; }
+.btn-primary:hover { background: var(--primary-2); }
+.btn-secondary { background: #e8edf4; color: #243247; }
+.btn-danger { background: #f4e6e6; color: var(--danger); }
+.helper { font-size: .86rem; color: var(--muted); line-height: 1.4; }
+.notice { padding: 12px 14px; border-radius: 11px; background: #f7f9fc; color: #40506a; border: 1px solid var(--border); }
+.dropdown {
+  position: relative;
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  overflow: hidden;
+  background: #fff;
+  max-height: 240px;
+  overflow-y: auto;
+}
+.dropdown.hidden { display: none; }
+.dropdown div { padding: 12px 14px; cursor: pointer; border-bottom: 1px solid #edf0f4; color: var(--text); }
+.dropdown div:last-child { border-bottom: 0; }
+.dropdown div:hover { background: #f5f7fb; }
+.mixer-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(86px, 1fr));
+  gap: 14px;
+}
+.eq-band, .volume-card {
+  background: #f8fafc;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px;
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+}
+.eq-band label, .volume-card label { text-align: center; }
+.eq-slider {
+  writing-mode: bt-lr;
+  -webkit-appearance: slider-vertical;
+  width: 28px;
+  height: 180px;
+}
+.range-row { display: grid; gap: 8px; }
+.range-row input[type=range] { width: 100%; }
+.choice-row { display: flex; gap: 10px; flex-wrap: wrap; }
+.choice {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  background: #fff;
+}
+.section-title { margin: 0 0 14px; font-size: 1.1rem; }
+.value { font-weight: 800; color: var(--primary); }
+@media (max-width: 900px) {
+  .grid-3 { grid-template-columns: 1fr; }
+  .mixer-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+}
+@media (max-width: 560px) {
+  .topbar { padding: 15px 16px; }
+  .page { width: min(100% - 18px, 1120px); margin-top: 18px; }
+  .card { padding: 17px; border-radius: 14px; }
+  .page-head { align-items: flex-start; flex-direction: column; }
+  .mixer-grid { grid-template-columns: 1fr 1fr; }
+  .eq-slider { height: 145px; }
+  .actions .btn { flex: 1 1 140px; }
+}
+</style>
+</head>
+<body>
+<div class="app-shell">
+<header class="topbar">
+  <div class="brand"><div class="brand-title" id="main-header">Snapcast Client</div><div class="brand-sub">Audio</div></div>
+  <div class="status-pill" id="status-pill">verbinde…</div>
+</header>
+<main class="page">
+  <div class="page-head">
+    <div><h1 class="page-title">Audio</h1><p class="page-copy">Ausgang, Lautstärke, Balance und 10-Band-Equalizer einstellen.</p></div>
+  </div>
+
+  <div class="grid" style="grid-template-columns:minmax(0,1.25fr) minmax(280px,.75fr)">
+    <section class="card">
+      <h2 class="section-title">Equalizer</h2>
+      <div class="mixer-grid"><div class="eq-band"><label for="slider1">31,25 Hz</label><input class="eq-slider" type="range" id="slider1" min="-13" max="13" step="1" value="0"><div class="value" id="value1">0 dB</div></div>
+<div class="eq-band"><label for="slider2">62,5 Hz</label><input class="eq-slider" type="range" id="slider2" min="-13" max="13" step="1" value="0"><div class="value" id="value2">0 dB</div></div>
+<div class="eq-band"><label for="slider3">125 Hz</label><input class="eq-slider" type="range" id="slider3" min="-13" max="13" step="1" value="0"><div class="value" id="value3">0 dB</div></div>
+<div class="eq-band"><label for="slider4">250 Hz</label><input class="eq-slider" type="range" id="slider4" min="-13" max="13" step="1" value="0"><div class="value" id="value4">0 dB</div></div>
+<div class="eq-band"><label for="slider5">500 Hz</label><input class="eq-slider" type="range" id="slider5" min="-13" max="13" step="1" value="0"><div class="value" id="value5">0 dB</div></div>
+<div class="eq-band"><label for="slider6">1 kHz</label><input class="eq-slider" type="range" id="slider6" min="-13" max="13" step="1" value="0"><div class="value" id="value6">0 dB</div></div>
+<div class="eq-band"><label for="slider7">2 kHz</label><input class="eq-slider" type="range" id="slider7" min="-13" max="13" step="1" value="0"><div class="value" id="value7">0 dB</div></div>
+<div class="eq-band"><label for="slider8">4 kHz</label><input class="eq-slider" type="range" id="slider8" min="-13" max="13" step="1" value="0"><div class="value" id="value8">0 dB</div></div>
+<div class="eq-band"><label for="slider9">8 kHz</label><input class="eq-slider" type="range" id="slider9" min="-13" max="13" step="1" value="0"><div class="value" id="value9">0 dB</div></div>
+<div class="eq-band"><label for="slider10">16 kHz</label><input class="eq-slider" type="range" id="slider10" min="-13" max="13" step="1" value="0"><div class="value" id="value10">0 dB</div></div></div>
+    </section>
+
+    <section class="card">
+      <h2 class="section-title">Ausgang</h2>
+      <div class="choice-row">
+        <label class="choice"><input type="radio" name="audioOption" value="1" id="left"> Mono links</label>
+        <label class="choice"><input type="radio" name="audioOption" value="2" id="right"> Mono rechts</label>
+        <label class="choice"><input type="radio" name="audioOption" value="3" id="stereo"> Stereo</label>
+        <label class="choice"><input type="radio" name="audioOption" value="4" id="subwoofer"> Subwoofer</label>
+      </div>
+
+      <div class="range-row" style="margin-top:22px">
+        <label for="slider11">Lautstärke <span class="value" id="value11">0</span></label>
+        <input type="range" id="slider11" min="0" max="100" step="5" value="0">
+      </div>
+
+      <div class="range-row" style="margin-top:22px">
+        <label for="balance-slider">Balance <span class="value" id="balance-value">0</span></label>
+        <input type="range" id="balance-slider" min="-100" max="100" step="1" value="0">
+      </div>
+
+      <label class="choice" style="margin-top:22px;display:inline-flex;gap:8px;align-items:center">
+        <input type="checkbox" id="muted"> Stumm
+      </label>
+
+      <div class="actions">
+        <a class="btn btn-secondary" href="/">Zurück</a>
+        <button class="btn btn-primary" id="save-button" type="button">Speichern</button>
+      </div>
+    </section>
+  </div>
+</main>
+</div>
+<script>
+let socket = null;
+function setStatus(text) { document.getElementById('status-pill').textContent = text; }
+function updateLabels() {
+  for (let i=1;i<=10;i++) document.getElementById(`value${i}`).textContent = document.getElementById(`slider${i}`).value + ' dB';
+  document.getElementById('value11').textContent = document.getElementById('slider11').value;
+  document.getElementById('balance-value').textContent = document.getElementById('balance-slider').value;
+}
+for (let i=1;i<=11;i++) document.addEventListener('input', e => { if (e.target.id === `slider${i}`) updateLabels(); });
+document.getElementById('balance-slider').addEventListener('input', updateLabels);
+
+window.addEventListener('load', () => {
+  updateLabels();
+  socket = new WebSocket(`ws://${window.location.hostname}/ws`);
+  socket.onopen = () => { setStatus('verbunden'); socket.send(JSON.stringify({type:6})); };
+  socket.onmessage = (event) => {
+    try {
+      const data = JSON.parse(event.data);
+      if (data.type === 1 && data["device-name"]) document.getElementById('main-header').textContent = data["device-name"];
+      if (data.type === 7 && data.audio) {
+        const a = data.audio;
+        if (Array.isArray(a.gain)) for (let i=0;i<10;i++) if (document.getElementById(`slider${i+1}`)) document.getElementById(`slider${i+1}`).value = a.gain[i];
+        document.getElementById('slider11').value = a.volume ?? 0;
+        document.getElementById('balance-slider').value = a.balance ?? 0;
+        document.getElementById('muted').checked = (a.muted === 1);
+        const radio = document.querySelector(`input[name="audioOption"][value="${a.output}"]`);
+        if (radio) radio.checked = true;
+        updateLabels();
+      }
+    } catch(e) {}
+  };
+  socket.onerror = () => setStatus('Fehler');
+  socket.onclose = () => setStatus('offline');
+});
+
+document.getElementById('save-button').onclick = () => {
+  if (!socket || socket.readyState !== WebSocket.OPEN) return alert('WebSocket ist nicht verbunden.');
+  const sliderValues = [];
+  for (let i=1;i<=10;i++) sliderValues.push(parseInt(document.getElementById(`slider${i}`).value,10));
+  const selected = document.querySelector('input[name="audioOption"]:checked');
+  const payload = {
+    type:5,
+    sliderValues: sliderValues,
+    volume: parseInt(document.getElementById('slider11').value,10),
+    muted: document.getElementById('muted').checked ? 1 : 0,
+    balance: parseInt(document.getElementById('balance-slider').value,10),
+    output: selected ? parseInt(selected.value,10) : 3
+  };
+  socket.send(JSON.stringify(payload));
+};
+</script>
+</body>
+</html>

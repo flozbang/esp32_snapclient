@@ -1,0 +1,40 @@
+# ESP-IDF build output
+build/
+
+# ESP-IDF generated / local configuration
+sdkconfig
+sdkconfig.old
+dependencies.lock
+
+# ESP-IDF managed components
+managed_components/
+
+# Eclipse / Espressif IDE
+.project
+.cproject
+.settings/
+
+# clang / editor configuration
+.clangd
+
+# Backup and archive files
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.7z
+*.rar
+
+# Local backup / test source files
+*_fallback*.c
+*~
+*.bak
+*.orig
+*.swp
+
+# Documentation / hardware files not required for build
+*.pdf
+
+# OS / editor junk
+.DS_Store
+Thumbs.db

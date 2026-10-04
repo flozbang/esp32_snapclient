@@ -1,0 +1,16 @@
+menu "Snapcast Configuration"
+
+    config SNAPCAST_PORT
+        string "SNAPCAST_PORT"
+        default "1704"
+        help
+            SNAPCAST_PORT tcp port of snapcast server.
+
+    config SNAPCAST_SERVER_IP
+        string "SNAPCAST_SERVER_IP"
+        default "192.168.0.76"
+        help
+            SNAPCAST_SERVER_IP ip address of the snapcast server.
+
+
+endmenu
