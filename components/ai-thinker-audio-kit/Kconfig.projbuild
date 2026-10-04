@@ -1,0 +1,11 @@
+menu "AI-Thinker ESP32 Audio Kit"
+
+config AI_THINKER_AUDIO_KIT_CUSTOM_BOARD
+    bool "AI-Thinker ESP32 Audio Kit with ES8388"
+    default y if AUDIO_BOARD_CUSTOM
+    help
+        Custom ESP-ADF board implementation for the AI-Thinker ESP32 Audio Kit
+        using the ES8388 codec. The pin configuration is based on the currently
+        working modified LyraT v4.3 board configuration.
+
+endmenu

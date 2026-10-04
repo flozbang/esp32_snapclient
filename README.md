@@ -46,9 +46,16 @@ This allows external applications, control systems and automation software to co
 
 ## Hardware
 
-The project targets ESP32-based audio hardware using an I²S audio codec.
+The project currently supports the **AI-Thinker ESP32 Audio Kit** and multiple audio output configurations.
 
-Hardware-specific configuration is handled by the ESP-IDF / ESP-ADF board configuration.
+Supported audio hardware includes:
+
+- **ES8388** audio codec
+- **Texas Instruments PCM5102** I²S DAC
+
+The AI-Thinker ESP32 Audio Kit with ES8388 is currently used as the primary development and test platform.
+
+Support for additional ESP32 audio hardware and I²S DACs may be added in the future.
 
 ## Software
 
