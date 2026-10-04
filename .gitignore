@@ -2,9 +2,7 @@
 build/
 
 # ESP-IDF generated / local configuration
-sdkconfig
 sdkconfig.old
-dependencies.lock
 
 # ESP-IDF managed components
 managed_components/
